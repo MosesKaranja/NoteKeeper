@@ -30,6 +30,7 @@ public class NoteActivity extends AppCompatActivity {
 
     EditText textNoteTitle, textNoteText;
     private int notePosition;
+    private boolean mIsCancelling;
 
 
     @Override
@@ -86,6 +87,11 @@ public class NoteActivity extends AppCompatActivity {
             sendEmail();
 
         }
+        else if (id == R.id.action_cancel){
+            mIsCancelling = true;
+            finish();
+
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -102,7 +108,19 @@ public class NoteActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        saveNote();
+        if (mIsCancelling){
+            if (mIsNewNote){
+                DataManager.getInstance().removeNote(notePosition);
+                Toast.makeText(this, "Changes Not Saved", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+        else{
+            saveNote();
+
+        }
+
     }
 
     private void saveNote() {
