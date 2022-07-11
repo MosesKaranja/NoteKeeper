@@ -48,6 +48,12 @@ public class NoteActivity extends AppCompatActivity {
 
         mViewModel = viewModelProvider.get(NoteActivityViewModel.class);
 
+        if (mViewModel.mIsNewlyCreated && savedInstanceState != null){
+            mViewModel.restoreState(savedInstanceState);
+        }
+
+        mViewModel.mIsNewlyCreated = false;
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
