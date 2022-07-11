@@ -23,6 +23,7 @@ public class NoteList extends AppCompatActivity {
     public static final String NOTE_INFO = "com.jwhh.notekeeper.NOTE_INFO";
 
     private AppBarConfiguration appBarConfiguration;
+    private ArrayAdapter<NoteInfo> adapterNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +54,17 @@ public class NoteList extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapterNotes.notifyDataSetChanged();
+
+    }
+
     private void initializeDisplayContent(){
         ListView listNotes = findViewById(R.id.list_notes);
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
-        ArrayAdapter<NoteInfo> adapterNotes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
+        adapterNotes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
         listNotes.setAdapter(adapterNotes);
 
         listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {

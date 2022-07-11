@@ -31,6 +31,9 @@ public class NoteActivity extends AppCompatActivity {
     EditText textNoteTitle, textNoteText;
     private int notePosition;
     private boolean mIsCancelling;
+    private String mOriginalNoteCourseId;
+    private String mOriginalNoteTitle;
+    private String mOriginalNoteText;
 
 
     @Override
@@ -58,6 +61,7 @@ public class NoteActivity extends AppCompatActivity {
         spinnerCourses.setAdapter(adapterCourses);
 
         readDisplayStateValues();
+        saveOriginalNoteValues();
 
          textNoteTitle = findViewById(R.id.editText_title);
          textNoteText = findViewById(R.id.editTextTextMultiLine2);
@@ -66,6 +70,14 @@ public class NoteActivity extends AppCompatActivity {
             displayNote(spinnerCourses, textNoteTitle, textNoteText);
 
 
+    }
+
+    private void saveOriginalNoteValues() {
+        if (mIsNewNote)
+            return;
+        mOriginalNoteCourseId = mNote.getCourse().getCourseId();
+        mOriginalNoteTitle = mNote.getTitle();
+        mOriginalNoteText = mNote.getText();
     }
 
     @Override
@@ -114,12 +126,24 @@ public class NoteActivity extends AppCompatActivity {
                 Toast.makeText(this, "Changes Not Saved", Toast.LENGTH_SHORT).show();
 
             }
+            else{
+                storePreviousNoteValues();
+
+            }
 
         }
         else{
             saveNote();
 
         }
+
+    }
+
+    private void storePreviousNoteValues(){
+        CourseInfo course = DataManager.getInstance().getCourse(mOriginalNoteCourseId);
+        mNote.setCourse(course);
+        mNote.setTitle(mOriginalNoteTitle);
+        mNote.setText(mOriginalNoteText);
 
     }
 
@@ -131,6 +155,7 @@ public class NoteActivity extends AppCompatActivity {
         Toast.makeText(this, "Note Saved Successfully", Toast.LENGTH_SHORT).show();
 
     }
+
 
     private void readDisplayStateValues(){
         Intent intent = getIntent();
